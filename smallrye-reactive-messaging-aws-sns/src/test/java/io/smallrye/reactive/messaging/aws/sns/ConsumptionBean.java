@@ -1,17 +1,22 @@
 package io.smallrye.reactive.messaging.aws.sns;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @ApplicationScoped
 public class ConsumptionBean {
 
-    public static String msgReceived;
+  private List<String> messages = new CopyOnWriteArrayList<>();
 
-    @Incoming("source")
-    public String consume(String message) {
-        msgReceived = message;
-        return message.toUpperCase();
-    }
+  public List<String> messages() {
+    return messages;
+  }
+
+  @Incoming("source")
+  public void consume(String message) {
+    messages.add(message);
+  }
 }
